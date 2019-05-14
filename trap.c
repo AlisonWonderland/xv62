@@ -78,6 +78,23 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
 
+  //cs153 - lab3
+    
+  case T_PGFLT: 
+    //YOUR CODE
+    /*
+    if (allocuvm(YOUR CODE) == 0) {
+      cprintf("case T_PGFLT from trap.c: allocuvm failed. Number of current allocated pages: %d\n", myproc()-
+      >stackPages);
+      exit();
+    }
+    */
+    //YOUR CODE
+    cprintf("case T_PGFLT from trap.c: allocuvm succeeded. Number of pages allocated: %d\n", myproc()->stackPages);
+    break;
+
+ //PAGEBREAK: 13
+
   //PAGEBREAK: 13
   default:
     if(myproc() == 0 || (tf->cs&3) == 0){
