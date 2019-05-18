@@ -336,6 +336,8 @@ copyuvm(pde_t *pgdir, uint sz)
       kfree(mem);
       goto bad;
     }
+
+    //insert another loop here
   }
   return d;
 
