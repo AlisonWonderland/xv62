@@ -19,6 +19,8 @@ exec(char *path, char **argv)
   pde_t *pgdir, *oldpgdir;
   struct proc *curproc = myproc();
 
+  cprintf("Initial number of pages by the process: %d\n", curproc->stackPages); //cs153 - Lab3. Not sure if this is the right place.
+
   begin_op();
 
   if((ip = namei(path)) == 0){
