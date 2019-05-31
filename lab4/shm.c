@@ -6,6 +6,7 @@
 #include "mmu.h"
 #include "proc.h"
 #include "spinlock.h"
+#include <stdbool.h> //Need to include or compiler issues when using bool
 
 struct {
   struct spinlock lock;
@@ -29,11 +30,23 @@ void shminit() {
 }
 
 int shm_open(int id, char **pointer) {
-
 //you write this
+  bool idExists = false;
+  
+  acquire(&(shm_table.lock)); 
+  for( i = 0; i < 64; ++i) {
+    if(shm_table.shm_pages[i].id == id) {
+      idExists = true;
+    }
+   }
+  
+  if(idExists) {
+    shm_table.shm_pages[i].refcnt = +1;
+  }
 
-
-
+  else {
+  
+  }
 
 return 0; //added to remove compiler warning -- you should decide what to return
 }
