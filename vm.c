@@ -235,7 +235,7 @@ allocuvm(pde_t *pgdir, uint oldsz, uint newsz)
     if(mem == 0){
       cprintf("allocuvm out of memory\n");
       deallocuvm(pgdir, newsz, oldsz);
-      return 0;
+      return 0; 
     }
     memset(mem, 0, PGSIZE);
     if(mappages(pgdir, (char*)a, PGSIZE, V2P(mem), PTE_W|PTE_U) < 0){
@@ -341,6 +341,7 @@ copyuvm(pde_t *pgdir, uint sz)
 
   //Only difference from the previous loop is that it iterates over different addresses. Lab3.
   //Start from the bottom of the stack and work your way up. Starting at the top doesn't work.
+  //Allocates page, copies parents page, adds it to child stack page.
   for(i = PGROUNDDOWN(KERNBASE - PGSIZE * curproc->stackPages); i < KERNBASE; i += PGSIZE){
     if((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)
       panic("copyuvm: pte should exist");
@@ -356,7 +357,6 @@ copyuvm(pde_t *pgdir, uint sz)
       goto bad;
     }
   }
-
 
   return d;
 
