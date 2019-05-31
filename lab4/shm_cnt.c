@@ -1,7 +1,6 @@
 #include "types.h"
 #include "stat.h"
 #include "user.h"
-#include "shm.c"
 #include "uspinlock.h"
 
 struct shm_cnt {
