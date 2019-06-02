@@ -33,22 +33,29 @@ int shm_open(int id, char **pointer) {
 //you write this
   bool idExists = false;
   
+  //Case 1. Checking to see if the id of the physical page is in the table already.
   acquire(&(shm_table.lock)); 
   for( i = 0; i < 64; ++i) {
-    if(shm_table.shm_pages[i].id == id) {
-      idExists = true;
+    if(shm_table.shm_pages[i].id == id) {      
+      mappages(myproc()->pgdir,(void*) PGROUNDUP(myproc()->sz), PGSIZE, V2P(shm_table.shm_pages[i].frame), PTE_W|PTE_u);
+      shm_table.shm_pages[i].refcnt = +1;
+      *pointer = (char *)PGROUNDUP(myproc()->sz);
+      myproc()->sz += PGSIZE;
+      release(&(shm_table.lock));//release here because we're done.
+      return 0;
     }
-   }
-  
-  if(idExists) {
-    shm_table.shm_pages[i].refcnt = +1;
   }
-
-  else {
   
+  //Case 2. If this is reached then shared memory segment doesn't exist.
+  acquire(&(shm_table.lock));
+  for (i = 0; i< 64; i++) {
+    if(shm_table.shm_pages[i].refcnt == 0) {
+      
   }
+  release(&(shm_table.lock));
+  
 
-return 0; //added to remove compiler warning -- you should decide what to return
+  return 0; //added to remove compiler warning -- you should decide what to return
 }
 
 
