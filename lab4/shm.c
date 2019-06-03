@@ -36,7 +36,7 @@ int shm_open(int id, char **pointer) {
   for (i = 0; i < 64; ++i) {
     if(shm_table.shm_pages[i].id == id) {      
       mappages(myproc()->pgdir,(void*) PGROUNDUP(myproc()->sz), PGSIZE, V2P(shm_table.shm_pages[i].frame), PTE_W|PTE_U);//create PTE
-      shm_table.shm_pages[i].refcnt = +1;
+      shm_table.shm_pages[i].refcnt += 1;
       *pointer = (char *)PGROUNDUP(myproc()->sz);
       myproc()->sz += PGSIZE;
       release(&(shm_table.lock));//release here because we're done.
@@ -71,7 +71,7 @@ int shm_open(int id, char **pointer) {
 int shm_close(int id) {
 //you write this too!
   int i;
- 
+
   acquire(&(shm_table.lock)); 
   for (i = 0; i < 64; ++i) {
     if(shm_table.shm_pages[i].id == id) {
